@@ -1,20 +1,28 @@
 import scrapy
 from outdoorParse.items import Boards
 
+
 class IdmediaSpyder(scrapy.Spider):
     name = 'itmedia'
-    allowed_domains = ['www.idmedia.ua']
-    start_urls = ['https://idmedia.ua/arka']
 
-    # def parse(self, response):
-    #
-    #     main_link = response.css("li.formats__item a::attr(href)").getall()
-    #     for link in main_link:
-    #         url = response.urljoin(link)
-    #         # print(url)
-    #         yield scrapy.Request(url, callback = self.parse)
+    start_urls = ['https://idmedia.ua/billboard',
+                  'https://idmedia.ua/citylight',
+                  'https://idmedia.ua/backlight',
+                  'https://idmedia.ua/roof',
+                  'https://idmedia.ua/scroll',
+                  'https://idmedia.ua/digital',
+                  'https://idmedia.ua/troll',
+                  'https://idmedia.ua/brandmauer',
+                  'https://idmedia.ua/ostanovka',
+                  'https://idmedia.ua/indoor',
+                  'https://idmedia.ua/arka',
+                  'https://idmedia.ua/turniket',
+                  'https://idmedia.ua/holder',
+                  'https://idmedia.ua/metrodigiltal',
+                  'https://idmedia.ua/metro'
+                  ]
 
-    def parse_dir_contents(self, response):
+    def parse(self, response):
 
         main_link = response.css('li.result__item')
         for board in main_link:
@@ -26,34 +34,10 @@ class IdmediaSpyder(scrapy.Spider):
             new_data['region'] = board.css('a.brand::text').getall()[2]
             new_data['side'] = board.css('h6.mark::text').getall()[4]
             new_data['format'] = board.css('h6.mark::text').getall()[6]
+            yield new_data
 
-            next_page = response.css('a.pagination__item--next::attr(href)').get()
+        next_page = response.css('a.pagination__item--next::attr(href)').get()
 
-            if next_page is not None:
-                next_page = response.urljoin(next_page)
-                yield scrapy.Request(next_page, callback=self.parse)
-
-            # print(actual_link)
-            # print(response)
-    # response.css("li.formats__item").xpath('a')
-    # def parse(self, response):
-    #     # boards = Boards()
-    #     main_link = response.css('li.result__item')
-    #
-    #     for board in main_link:
-    #
-    #         yield {
-    #             'id': board.css('span.btn--xsm::text').get(),
-    #             'title': board.css('h5.result__address::text').get(),
-    #             'type': board.css('a.brand::text').getall()[0],
-    #             'city': board.css('a.brand::text').getall()[1],
-    #             'region': board.css('a.brand::text').getall()[2],
-    #             'side': board.css('h6.mark::text').getall()[4],
-    #             'format': board.css('h6.mark::text').getall()[6]
-    #         }
-    #     next_page = response.css('a.pagination__item--next::attr(href)').get()
-    #
-    #     if next_page is not None:
-    #         next_page = response.urljoin(next_page)
-    #         yield scrapy.Request(next_page, callback=self.parse)
-
+        if next_page is not None:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(next_page, callback=self.parse)
