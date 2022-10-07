@@ -6,7 +6,11 @@
 import scrapy
 
 
-class OutdoorparseItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class Boards(scrapy.Item):
+    id = scrapy.Field()
+    title = scrapy.Field()
+    type = scrapy.Field()
+    city = scrapy.Field()
+    region = scrapy.Field()
+    side = scrapy.Field()
+    format = scrapy.Field()
